@@ -7,22 +7,28 @@ describe('MessageList.test.js', () => {
   let cmp
 
   beforeEach(() => {
-    const messageWrapper = {
+    const messageWrapper1 = {
       render(h) {
-        return h(Message, { props: { message: 'hey yo' }  })
+        return h(Message, { props: { message: 'hey yo' } })
+      }
+    }
+
+    const messageWrapper2 = {
+      render(h) {
+        return h(Message, { props: { message: 'hey yo' } })
       }
     }
 
     cmp = mount(MessageList, {
       slots: {
-        default: messageWrapper
+        default: [messageWrapper1, messageWrapper2]
       }
     })
   })
 
   it('Messages are inserted in a ul.list-messages element', () => {
     const list = cmp.find('ul.list-messages')
-    expect(list.find('.message').isVueInstance()).toBe(true)
+    expect(list.findAll('.message').length).toEqual(2)
   })
 
   it('Header slot renders a default header text', () => {
