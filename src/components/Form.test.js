@@ -1,75 +1,27 @@
 import { shallow } from '@vue/test-utils'
 import Form from './Form'
+import 'babel-polyfill'
+
+jest.mock('axios', () => ({
+  get: jest.fn(() => Promise.resolve({ data: 3 }))
+}))
+
+import axios from 'axios'
 
 describe('Form.test.js', () => {
   let cmp
 
   beforeEach(() => {
     cmp = shallow(Form)
+    jest.resetModules()
+    jest.clearAllMocks()
   })
 
-  describe('Properties', () => {
-    it('returns the string in normal order if reversed property is not true', () => {
-      cmp.vm.inputValue = 'Yoo'
-      expect(cmp.vm.reversedInput).toBe('Yoo')
-    })
+  it('Calls axios.get', async () => {
+    const result = await cmp.vm.onSubmit('an')
 
-    it('returns the reversed string if reversed property is true', () => {
-      cmp.vm.inputValue = 'Yoo'
-      cmp.setProps({ reversed: true })
-      expect(cmp.vm.reversedInput).toBe('ooY')
-    })
-  })
-
-  describe('Watchers - inputValue', () => {
-    let spy
-
-    beforeAll(() => {
-      spy = jest.spyOn(console, 'log')
-    })
-
-    afterEach(() => {
-      spy.mockClear()
-    })
-
-    it('is not called if value is empty (trimmed)', (next) => {
-      cmp.vm.inputValue = '   '
-      cmp.vm.$nextTick(() => {
-        expect(spy).not.toBeCalled()
-        next()
-      })
-    })
-
-    // it('is not called if values are the same', (next) => {
-    //   cmp.vm.inputValue = 'foo'
-
-    //   cmp.vm.$nextTick(() => {
-    //     spy.mockClear()
-    //     cmp.vm.inputValue = 'foo'
-
-    //     cmp.vm.$nextTick(() => {
-    //       expect(spy).not.toBeCalled()
-    //       next()
-    //     })
-    //   })
-    // })
-
-    it('is not called if values are the same', next => {
-      cmp = shallow(Form, { data: ({ inputValue: 'foo' }) })
-      cmp.vm.inputValue = 'foo'
-
-      cmp.vm.$nextTick(() => {
-        expect(spy).not.toBeCalled()
-        next()
-      })
-    })
-
-    it('is called with the new value in other cases', (next) => {
-      cmp.vm.inputValue = 'foo'
-      cmp.vm.$nextTick(() => {
-        expect(spy).toBeCalled()
-        next()
-      })
-    })
+    expect(result).toEqual({ data: 3 })
+    expect(cmp.vm.results).toEqual(3)
+    expect(axios.get).toBeCalledWith('https://jsonplaceholder.typicode.com/posts?q=an')
   })
 })

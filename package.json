@@ -18,6 +18,8 @@
     "email": "sinchangwen@gmail.com"
   },
   "dependencies": {
+    "axios": "0.17.1",
+    "babel-polyfill": "6.26.0",
     "normalize.css": "^7.0.0",
     "object-assign": "^4.1.1",
     "promise-polyfill": "^6.0.2"

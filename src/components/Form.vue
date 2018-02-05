@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form action="">
+    <form action="" @submit.prevent="onSubmit(inputValue)">
       <input type="text" v-model="inputValue">
       <span class="reversed">{{ reversedInput }}</span>
     </form>
@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'app-form',
   props: ['reversed'],
@@ -26,6 +28,17 @@ export default {
       if(newVal.trim().length && newVal !== oldVal) {
         console.log(newVal)
       }
+    }
+  },
+  methods: {
+    onSubmit(value) {
+      const getPromise = axios.get('https://jsonplaceholder.typicode.com/posts?q=' + value)
+
+      getPromise.then(results => {
+        this.results = results.data
+      })
+
+      return getPromise
     }
   }
 }
