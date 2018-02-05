@@ -1,0 +1,53 @@
+{
+  "private": true,
+  "name": "vue-test",
+  "productName": "vue-test",
+  "description": "My well-made Vue project",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "dev": "poi --port 5000",
+    "build": "poi build",
+    "report": "poi build --bundle-report",
+    "serve": "serve dist --single",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "author": {
+    "name": "sinchang",
+    "email": "sinchangwen@gmail.com"
+  },
+  "dependencies": {
+    "normalize.css": "^7.0.0",
+    "object-assign": "^4.1.1",
+    "promise-polyfill": "^6.0.2"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "1.0.0-beta.11",
+    "babel-jest": "22.1.0",
+    "jest": "22.1.4",
+    "jest-serializer-vue": "0.3.0",
+    "poi": "^9.0.0",
+    "poi-preset-bundle-report": "^2.0.0",
+    "serve": "^6.1.0",
+    "vue-jest": "2.0.1"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ],
+    "mapCoverage": true
+  }
+}
