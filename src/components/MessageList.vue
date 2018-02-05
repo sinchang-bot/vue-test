@@ -1,17 +1,20 @@
 <template>
-    <ul>
-      <Message
-        v-for="(message, index) in messages"
-        :message="message"
-        @message-clicked="handleMessageClick"
-        :key="index" />
+  <div>
+    <header class="list-header">
+      <slot name="header">
+        This is a default header
+      </slot>
+    </header>
+    <ul class="list-messages">
+      <slot></slot>
     </ul>
+  </div>
 </template>
 
 <script>
 import Message from './Message'
 export default {
-  name: 'list',
+  name: 'MessageList',
   props: ['messages'],
   components: {
     Message

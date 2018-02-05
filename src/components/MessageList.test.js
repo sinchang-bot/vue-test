@@ -1,74 +1,50 @@
+import Vue from 'vue'
 import { mount } from '@vue/test-utils'
-
-import MessageList from './MessageList.vue'
-import Message from './Message.vue'
+import MessageList from './MessageList'
+import Message from './Message'
 
 describe('MessageList.test.js', () => {
   let cmp
 
   beforeEach(() => {
+    const messageWrapper = {
+      render(h) {
+        return h(Message, { props: { message: 'hey yo' }  })
+      }
+    }
+
     cmp = mount(MessageList, {
-      // Beaware that props is overriden using `propsData`
-      propsData: {
-        messages: ['Cat']
+      slots: {
+        default: messageWrapper
       }
     })
   })
 
-  it('has received ["Cat"] as the message property', () => {
-    expect(cmp.vm.messages).toEqual(['Cat'])
+  it('Messages are inserted in a ul.list-messages element', () => {
+    const list = cmp.find('ul.list-messages')
+    expect(list.find('.message').isVueInstance()).toBe(true)
   })
 
-  it('has the expected html structure', () => {
-    expect(cmp.element).toMatchSnapshot()
+  it('Header slot renders a default header text', () => {
+    const header = cmp.find('.list-header')
+    expect(header.text().trim()).toBe('This is a default header')
   })
 
-  it('is a MessageList component', () => {
-    expect(cmp.is(MessageList)).toBe(true)
+  it('Header slot is rendered withing .list-header', () => {
+    const component = mount(MessageList, {
+      slots: {
+        header: '<div>What an awesome header</div>'
+      }
+    })
 
-    // Or with CSS selector
-    expect(cmp.is('ul')).toBe(true)
+    const header = component.find('.list-header')
+    expect(header.text().trim()).toBe('What an awesome header')
   })
 
-  it('contains a Message component', () => {
-    expect(cmp.contains(Message)).toBe(true)
-
-    // Or with CSS selector
-    expect(cmp.contains('.message')).toBe(true)
-  })
-
-  it('Both MessageList and Message are vue instances', () => {
-    expect(cmp.isVueInstance()).toBe(true)
-    expect(cmp.find(Message).isVueInstance()).toBe(true)
-  })
-
-  it('Message element exists', () => {
-    expect(cmp.find('.message').exists()).toBe(true)
-  })
-
-  it('Message is not empty', () => {
-    expect(cmp.find(Message).isEmpty()).toBe(false)
-  })
-
-  it('Message has a class attribute set to "message"', () => {
-    // For asserting "class", the `hasClass` method is easier
-    expect(cmp.find(Message).attributes().class).toBe('message')
-  })
-
-  it('Message component has the .message class', () => {
-    expect(cmp.find(Message).classes()).toContain('message')
-  })
-
-  it('Message component has style padding-top: 10', () => {
-    expect(cmp.find(Message).element.style._values['margin-top']).toEqual('10px')
-  })
-
-  it('Calls handleMessageClick when @message-click happens', () => {
-    const stub = jest.fn()
-    cmp.setMethods({ handleMessageClick: stub })
-    cmp.update()
-
-    const el = cmp.find(Message).vm.$emit('message-clicked', 'cat')
-    expect(stub).toBeCalledWith('cat')
+  it('Message length is higher than 5', () => {
+    const messages = cmp.findAll(Message)
+    messages.wrappers.forEach(c => {
+      expect(c.vm.message.length).toBeGreaterThan(5)
+    })
   })
 })
