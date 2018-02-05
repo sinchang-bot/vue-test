@@ -1,16 +1,19 @@
 <template>
     <ul>
-      <li
+      <Message
         v-for="(message, index) in messages"
-        :key="index">
-        {{ message }}
-      </li>
+        :message="message"
+        :key="index" />
     </ul>
 </template>
 
 <script>
+import Message from './Message'
 export default {
   name: 'list',
-  props: ['messages']
+  props: ['messages'],
+  components: {
+    Message
+  }
 }
 </script>
