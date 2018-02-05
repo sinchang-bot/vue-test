@@ -62,4 +62,13 @@ describe('MessageList.test.js', () => {
   it('Message component has style padding-top: 10', () => {
     expect(cmp.find(Message).element.style._values['margin-top']).toEqual('10px')
   })
+
+  it('Calls handleMessageClick when @message-click happens', () => {
+    const stub = jest.fn()
+    cmp.setMethods({ handleMessageClick: stub })
+    cmp.update()
+
+    const el = cmp.find(Message).vm.$emit('message-clicked', 'cat')
+    expect(stub).toBeCalledWith('cat')
+  })
 })
